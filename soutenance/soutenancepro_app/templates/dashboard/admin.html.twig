@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Tableau de bord Admin{% endblock %}
+{% block body %}
+<h3 class="mb-4">Tableau de bord — Administrateur</h3>
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card card-stat p-3" style="background:#4f46e5;">
+            <i class="bi bi-people fs-2"></i>
+            <div class="display-6">{{ nbEtudiants }}</div>
+            <div>Étudiants</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat p-3" style="background:#0891b2;">
+            <i class="bi bi-person-badge fs-2"></i>
+            <div class="display-6">{{ nbEnseignants }}</div>
+            <div>Enseignants</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat p-3" style="background:#16a34a;">
+            <i class="bi bi-door-open fs-2"></i>
+            <div class="display-6">{{ nbSalles }}</div>
+            <div>Salles</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat p-3" style="background:#ea580c;">
+            <i class="bi bi-calendar-event fs-2"></i>
+            <div class="display-6">{{ nbSoutenances }}</div>
+            <div>Soutenances</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Soutenances{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Gestion des soutenances</h3>
+    <a href="{{ path('soutenance_new') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Programmer</a>
+</div>
+
+<form method="get" class="row mb-3">
+    <div class="col-md-3">
+        <input type="date" name="date" value="{{ date }}" class="form-control">
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-outline-secondary"><i class="bi bi-search"></i> Filtrer par date</button>
+        <a href="{{ path('soutenance_index') }}" class="btn btn-outline-secondary">Réinitialiser</a>
+    </div>
+</form>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Étudiant</th><th>Président</th><th>Rapporteur</th><th>Examinateur</th><th>Salle</th><th>Date</th><th>Heure</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for s in soutenances %}
+                <tr>
+                    <td>{{ s.etudiant }}</td>
+                    <td>{{ s.president }}</td>
+                    <td>{{ s.rapporteur }}</td>
+                    <td>{{ s.examinateur }}</td>
+                    <td>{{ s.salle }}</td>
+                    <td>{{ s.date ? s.date|date('d/m/Y') : '' }}</td>
+                    <td>{{ s.heure ? s.heure|date('H:i') : '' }}</td>
+                    <td><span class="badge bg-{{ s.statut == 'annulee' ? 'danger' : 'success' }}">{{ s.statut }}</span></td>
+                    <td>
+                        <a href="{{ path('soutenance_edit', {id: s.id}) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <form method="post" action="{{ path('soutenance_cancel', {id: s.id}) }}" class="d-inline" onsubmit="return confirm('Annuler cette soutenance ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ s.id) }}">
+                            <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-circle"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="9" class="text-muted">Aucune soutenance programmée.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

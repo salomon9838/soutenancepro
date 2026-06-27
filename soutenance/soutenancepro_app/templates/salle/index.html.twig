@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block title %}Salles{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Gestion des salles</h3>
+    <a href="{{ path('salle_new') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Ajouter</a>
+</div>
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Code</th><th>Capacité</th><th>Localisation</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for s in salles %}
+                <tr>
+                    <td>{{ s.code }}</td>
+                    <td>{{ s.capacite }}</td>
+                    <td>{{ s.localisation }}</td>
+                    <td>
+                        <a href="{{ path('salle_edit', {id: s.id}) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <form method="post" action="{{ path('salle_delete', {id: s.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer cette salle ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ s.id) }}">
+                            <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4" class="text-muted">Aucune salle enregistrée.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

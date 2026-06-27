@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Connexion - SoutenancePro{% endblock %}
+{% block body_public %}
+<div class="d-flex align-items-center justify-content-center" style="min-height: 100vh; background: linear-gradient(135deg,#1e293b,#334155);">
+    <div class="card shadow-lg" style="width: 380px; border-radius: 14px;">
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <i class="bi bi-mortarboard-fill text-primary" style="font-size: 2.5rem;"></i>
+                <h4 class="mt-2 fw-bold">SoutenancePro</h4>
+                <p class="text-muted small">Gestion des Soutenances de Fin d'Études</p>
+            </div>
+            {% if error %}
+                <div class="alert alert-danger">Email ou mot de passe incorrect.</div>
+            {% endif %}
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" value="{{ last_username }}" class="form-control" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mot de passe</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button class="btn btn-primary w-100" type="submit"><i class="bi bi-box-arrow-in-right"></i> Se connecter</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

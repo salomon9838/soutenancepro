@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Salle;
+use App\Form\SalleType;
+use App\Repository\SalleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[Route('/admin/salles')]
+class SalleController extends AbstractController
+{
+    #[Route('/', name: 'salle_index', methods: ['GET'])]
+    public function index(SalleRepository $repo): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        return $this->render('salle/index.html.twig', ['salles' => $repo->findAll()]);
+    }
+
+    #[Route('/nouveau', name: 'salle_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $salle = new Salle();
+        $form = $this->createForm(SalleType::class, $salle);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($salle);
+            $em->flush();
+            $this->addFlash('success', 'Salle ajoutée avec succès.');
+            return $this->redirectToRoute('salle_index');
+        }
+
+        return $this->render('salle/form.html.twig', ['form' => $form->createView(), 'titre' => 'Ajouter une salle']);
+    }
+
+    #[Route('/{id}/modifier', name: 'salle_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Salle $salle, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $form = $this->createForm(SalleType::class, $salle);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Salle modifiée avec succès.');
+            return $this->redirectToRoute('salle_index');
+        }
+
+        return $this->render('salle/form.html.twig', ['form' => $form->createView(), 'titre' => 'Modifier la salle']);
+    }
+
+    #[Route('/{id}/supprimer', name: 'salle_delete', methods: ['POST'])]
+    public function delete(Request $request, Salle $salle, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if ($this->isCsrfTokenValid('delete'.$salle->getId(), $request->request->get('_token'))) {
+            $em->remove($salle);
+            $em->flush();
+            $this->addFlash('success', 'Salle supprimée.');
+        }
+        return $this->redirectToRoute('salle_index');
+    }
+}
